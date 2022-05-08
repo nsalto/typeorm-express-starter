@@ -24,8 +24,8 @@ export const db = new DataSource({
 
 db.initialize()
   .then(() => {
-    console.log(`Data Source with typeorm has been initialized successfully.`);
+    console.log(`DB has been initialized successfully.`);
   })
   .catch((err) => {
-    console.error("Error during Data Source initialization:", err);
+    console.error("Error during DB initialization:", err);
   });
