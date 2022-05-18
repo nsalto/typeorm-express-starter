@@ -2,7 +2,7 @@
   "name": "typeorm-express-starter",
   "version": "1.0.0",
   "description": "Starter backend, nodejs, typescript, typeorm",
-  "main": "src/server.ts",
+  "main": "src/app.ts",
   "directories": {
     "test": "test"
   },
