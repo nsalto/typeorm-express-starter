@@ -9,23 +9,22 @@ const signIn = async (req: Request, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
   const userRepository = await User.getRepository();
   const user = await userRepository.findOne({ where: { email: email } });
-
-  /* Check if user is founded */
+  /* Check if user is finded */
   if (!user) {
     next(
       Error.badRequest(
-        "Invalid Login Credentials; The Username or Password is Incorrect!"
+        "The Username or Password is Incorrect!"
       )
     );
     return;
   }
-
+  /* If user is finded check the password */
   const valid = await compare(password, user.password);
   /* Check if the password  is valid */
   if (!valid) {
     next(
       Error.badRequest(
-        "Invalid Login Credentials; The Username or Password is Incorrect!"
+        "The Username or Password is Incorrect!"
       )
     );
     return;
@@ -33,7 +32,7 @@ const signIn = async (req: Request, res: Response, next: NextFunction) => {
 
   const auth = new Auth();
   /* Pass Refresh Token to httpOnly cookie */
-  res.cookie("jid", auth.createRefreshToken(user), { httpOnly: true });
+  res.cookie("ssid", auth.createRefreshToken(user), { httpOnly: true });
 
   /* if login is successful return token */
   return {
@@ -48,15 +47,14 @@ const refreshToken = async (
 ) => {
   let authPayload: any;
   const refreshTokenSecrete = process.env.REFRESH_TOKEN_SECRETE;
-  const refreshToken = req.cookies.jid;
+  const refreshToken = req.cookies.ssid;
   const userRepository = await User.getRepository();
   if (!refreshToken) {
-    next(Error.unauthorized("Unauthroized: Please login to continue!"));
+    next(Error.unauthorized("Unauthroized: Please login to continue."));
     return;
   }
-
   verify(refreshToken, refreshTokenSecrete!, (err: any, payload: any) => {
-    // Asign the payload
+    /* asign atuh payload */
     authPayload = payload;
 
     if (err) {
@@ -72,7 +70,7 @@ const refreshToken = async (
   const auth = new Auth();
 
   /* Pass Refresh Token to httpOnly cookie */
-  res.cookie("jid", auth.createRefreshToken(user!), { httpOnly: true });
+  res.cookie("ssid", auth.createRefreshToken(user!), { httpOnly: true });
 
   /* if login is successful return token */
   return {
@@ -82,7 +80,7 @@ const refreshToken = async (
 
 const signOut = async (req: Request, res: Response, next: NextFunction) => {
   /* Delete the refresh token in the httpOnly cookie */
-  res.clearCookie("jid");
+  res.clearCookie("ssid");
   return null;
 };
 
